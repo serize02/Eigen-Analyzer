@@ -16,7 +16,7 @@ def generate_symmetric_matrices_and_eigenvalues (num_matrices, low, high):
             })
     return data
 
-matrices_data = generate_symmetric_matrices_and_eigenvalues(100, 1, 100)
+matrices_data = generate_symmetric_matrices_and_eigenvalues(30, 1, 100)
 
 df = pd.DataFrame(matrices_data)
 
