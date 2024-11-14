@@ -1,7 +1,3 @@
----
-fontsize: 20pt
----
-
 # Power Method: Numerical Analysis
 
 The power method is an iterative technique used in numerical analysis to find the dominant eigenvalue and corresponding eigenvector of a matrix. It is particularly useful for large sparse matrices where other methods may be computationally expensive.  Its extension to the inverse power method is practical for finding any eigenvalue provided that a
