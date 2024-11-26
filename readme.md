@@ -3,6 +3,12 @@
 The power method is an iterative technique used in numerical analysis to find the dominant eigenvalue and corresponding eigenvector of a matrix. It is particularly useful for large sparse matrices where other methods may be computationally expensive.  Its extension to the inverse power method is practical for finding any eigenvalue provided that a
 good initial approximation is known.
 
+Ensure you have Python installed on your system. Then, install the necessary dependencies by running:
+
+```shell
+pip install -r requirements.txt
+```
+
 ## Computing the Dominant Eigenvalues
 
 Let $A$ be an $n \times n$, non-singular real valued matrix with a basis of eigenvectors. Denote the eigenvalues by $\lambda_j$ and eigenvectors by $v_j$. 
@@ -65,9 +71,12 @@ $$\frac{1}{1+f} = 1 + O(f)$$
 
 Thus, the power method computes the dominant eigenvalue (largest in magnitude), and the convergence is linear. The rate depends on the size of $\lambda_1$ relative to the next largest eigenvalue $\lambda_2$.
 
-## Requirements
+## The Inverse Power Method
 
-Ensure you have Python installed on your system. Then, install the necessary dependencies by running:
+The Inverse Power method is a modification of the Power method that gives faster convergence. It is used to determine the eigenvalue of $A$ that is closest to a specified number $q$.
 
-```shell
-pip install -r requirements.txt
+Suppose that matrix $A$ has eigenvalues $\lambda_1, \lambda_2, \dots, \lambda_n$ with linearly independent eigenvectors $v_1^{(1)}, v_2^{(2)}, \dots, v_n^{(n)}$. The eigenvalues of $(A-qI)^{-1}$ where $q \neq \lambda_i$ for $i = 1,2,3, \dots, n$ are:
+
+$$\frac{1}{\lambda_1 - q}, \frac{1}{\lambda_2 - q}, \dots, \frac{1}{\lambda_n - q}$$
+
+
