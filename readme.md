@@ -93,8 +93,8 @@ $$ \frac{1}{\|\lambda_k-q\|} = \max_{1 \leq i \leq n}\frac{1}{|\lambda_k-q|},$$
 
 and $\lambda_k \approx q + \frac{1}{\mu^{(m)}}$ is the eigenvalue of $A$ that is closest to $q$.
 
-The vector $y^{(m)}$ is obtained by solving the system of linear equations $(A-qI)y^{(m)} = x^{(m-1)}$.
+The vector $y^{(m)}$ is obtained by solving the system of linear equations $(A-qI)y^{(m)} = x^{(m-1)}$ and for that we use the `numpy.linalg.solve` function, that uses LU decomposition with partial pivoting and row interchanges.
 
-In general, Gaussian elimination with pivoting is used to solve it, but in the implementation provided, the `numpy.linalg.solve` function is used.
+
 
 
