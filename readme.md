@@ -79,4 +79,22 @@ Suppose that matrix $A$ has eigenvalues $\lambda_1, \lambda_2, \dots, \lambda_n$
 
 $$\frac{1}{\lambda_1 - q}, \frac{1}{\lambda_2 - q}, \dots, \frac{1}{\lambda_n - q}$$
 
+Applying the Power Method to $(A-qI)^{-1}$ gives
+
+$$ y^{(m)} = (A-qI)^{-1}x^{(m-1)} ,$$
+
+$$ \mu^{(m)} = y_{p_{m-1}}^{(m)} = \frac{y_{p_{m-1}}^{(m)}}{x_{p_{m-1}}^{(m-1)}} = \frac{ \sum_{j=1}^n \beta\frac{1}{(\lambda_j-1)^m} v_{p_{m-1}}^{(j)} } {\sum_{j=1}^n \beta\frac{1}{(\lambda_j-1)^{m-1}} v_{p_{m-1}}^{(j)}},$$
+
+$$x^{(m)} = \frac{y^{(m)}}{y_{p_m}^{(m)}}$$
+
+where at each step, $p_m$ represents the smallest integer for which $\left| y_{p_m}^{(m)} \right| = \| y^{(m)} \|_\infty$. The sequence $\left\{\mu^{(m)}\right\} $ converges to $\frac{1}{\lambda_k - q}$ , where
+
+$$ \frac{1}{\|\lambda_k-q\|} = \max_{1 \leq i \leq n}\frac{1}{|\lambda_k-q|},$$
+
+and $\lambda_k \approx q + \frac{1}{\mu^{(m)}}$ is the eigenvalue of $A$ that is closest to $q$.
+
+The vector $y^{(m)}$ is obtained by solving the system of linear equations $(A-qI)y^{(m)} = x^{(m-1)}$.
+
+In general, Gaussian elimination with pivoting is used to solve it, but in the implementation provided, the `numpy.linalg.solve` function is used.
+
 
