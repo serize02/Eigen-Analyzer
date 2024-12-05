@@ -55,7 +55,6 @@ failures = 0
 
 for index, row in df.iterrows():
     matrix = np.array( eval(row['matrix']))
-    # x = np.random.rand(matrix.shape[0])
     x = np.ones(matrix.shape[0])
     try:
         values, iter = inverse_power_method(matrix, x)
