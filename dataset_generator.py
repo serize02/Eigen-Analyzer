@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
 def generate_symmetric_matrices_and_eigenvalues (num_matrices, low, high):
     data = []
     for size in range(2, 5):
@@ -10,18 +9,19 @@ def generate_symmetric_matrices_and_eigenvalues (num_matrices, low, high):
             A = np.random.randint(low, high, size = (size,size))
             matrix = (A + A.T) // 2 # Symmetric matrix
             eigenvalues, _ = np.linalg.eig(matrix)
+            dominant = np.max(np.abs(eigenvalues))
             data.append({
-                'Matrix': matrix.flatten(),
-                'Eigenvalues': eigenvalues
+                'matrix': matrix.flatten(),
+                'dominant-eigenvalue': dominant
             })
     return data
 
-matrices_data = generate_symmetric_matrices_and_eigenvalues(10, 1, 100)
+matrices_data = generate_symmetric_matrices_and_eigenvalues(30, 1, 100)
 
 df = pd.DataFrame(matrices_data)
 
-df['Matrix'] = df['Matrix'].apply(lambda x: np.array(x).reshape(int(np.sqrt(len(x))), int(np.sqrt(len(x)))).tolist())
-df['Eigenvalues'] = df['Eigenvalues'].apply(lambda x: np.array(x).tolist())
+df['matrix'] = df['matrix'].apply(lambda x: np.array(x).reshape(int(np.sqrt(len(x))), int(np.sqrt(len(x)))).tolist())
+df['dominant-eigenvalue'] = df['dominant-eigenvalue'].apply(lambda x: round(x, 7))
 
 df.to_csv('dataset.csv', index=False)
 print("Dataset generated and saved to 'dataset.csv'")

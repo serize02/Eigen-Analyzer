@@ -1,47 +1,8 @@
 import numpy as np
+import pandas as pd
 
-def read_matrix(matrix_dim):
-    """
-    Reads a nxn matrix
-    :param matrix_dim: Matrix dimension
-    :return: Matrix of dimension matrix_dim x matrix_dim
-    """
-    temp = np.zeros((matrix_dim, matrix_dim), float)
-
-    for row in range(matrix_dim):
-        for column in range(matrix_dim):
-            temp[row][column] = float(input())
-
-    return temp
-
-
-def read_vector(vector_dim):
-    """
-    Reads a n-dimension vector
-    :param vector_dim: Vector dimension
-    :return: Vector of dimension vector_dim
-    """
-    temp = np.zeros(vector_dim, float)
-
-    for index in range(vector_dim):
-        temp[index] = float(input())
-
-    return temp
-
-def infinite_norm(vector):
-    """
-    Returns the infinite norm of vector and its smallest index
-    :param vector: To calculate infinite norm of
-    :return: Norm of vector and its smallest index
-    """
-    maximum, smallest_i = abs(vector[0]), 0
-
-    for index in range(vector.shape[0]):
-        if abs(vector[index]) > maximum:
-            maximum, smallest_i = abs(vector[index]), index
-
-    return maximum, smallest_i
-
+TOL = 1e-4
+N = 100
 
 def augmented(coefficients, independents):
     """
@@ -58,42 +19,54 @@ def augmented(coefficients, independents):
     return temp
 
 
-# Get matrix dimensions
-n = int(input())
-# Read nxn matrix
-A = read_matrix(n)
-# Read the initial vector
-x = read_vector(n)
-# Get maximum number of iterations
-N = int(input())
-# Get error tolerance
-tol = float(input())
+def inverse_power_method (A, x):
+    n = A.shape[0]
+    q = x.T.dot(A).dot(x) / x.T.dot(x) # initial approximation
+    p = np.linalg.norm(x, ord=np.inf) # smallest index of x with greater norm
+    x = x / p
 
-# Set initial approximation 'q'
-q = x.T.dot(A).dot(x) / x.T.dot(x)
-# Smallest index of x with greater norm
-p = infinite_norm(x)[1]
-x = x / x[p]
-k = 1
+    iteration_values = []
 
-while k <= N:
-    if np.linalg.matrix_rank(A) == np.linalg.matrix_rank(augmented(A, x)) and np.linalg.matrix_rank(augmented(A, x)) == A.shape[1] :
-        # The linear system has infinite solutions
-        print(q, " is an eigenvalue")
-        break
-    y = np.linalg.solve(A - q * np.identity(n, float), x)
-    u = y[p]
-    # Smallest index of y with greater norm
-    p = infinite_norm(y)[1]
-    err = infinite_norm(x - (y / y[p]))[0]
-    x = y / y[p]
+    for k in range(N):
+        if np.linalg.matrix_rank(A) == np.linalg.matrix_rank(augmented(A, x)) and np.linalg.matrix_rank(augmented(A, x)) == A.shape[1] :
+            return q, x
 
-    if err < tol:
-        print(1/u + q, " is an eigenvalue\n")
-        print(x, " is its associated eigenvector")
-        break
+        y = np.linalg.solve(A - q * np.identity(n, float), x)
+        u = p
+        p = np.linalg.norm(y, ord=np.inf)
+        err = np.linalg.norm(x - (y / p), ord=np.inf)
+        x = y / p
 
-    k += 1
+        iteration_values.append((k+1,1/u+q))
 
-if k > N:
-    print("Failure after ", N, " iterations")
+        if err < TOL:
+            return iteration_values
+
+    raise ValueError("Failure after max number of iterations was reached")
+
+df = pd.read_csv('dataset.csv')
+
+print("Dataset loaded")
+print("size: ", df.size)
+
+results = []
+
+failures = 0
+
+for index, row in df.iterrows():
+    matrix = np.array( eval(row['matrix']))
+    x = np.random.rand(matrix.shape[0])
+    try:
+        iteration_values = inverse_power_method(matrix, x)
+        results.append({
+            'dominant-eigenvalue': row['dominant-eigenvalue'],
+            'computed-eigenvalues': iteration_values
+        })
+    except ValueError as e:
+        failures+=1
+
+results_df = pd.DataFrame(results)
+
+results_df.to_csv('computed_results.csv', index=False)
+print("Results saved to 'results.csv'")
+print('Total failures: ', failures)
