@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-TOL = 1e-4
-N = 100
+TOL = 1e-6
+N = 20
 
 def augmented(coefficients, independents):
     """
@@ -25,7 +25,7 @@ def inverse_power_method (A, x):
     p = np.linalg.norm(x, ord=np.inf) # smallest index of x with greater norm
     x = x / p
 
-    iteration_values = []
+    values = []
 
     for k in range(N):
         if np.linalg.matrix_rank(A) == np.linalg.matrix_rank(augmented(A, x)) and np.linalg.matrix_rank(augmented(A, x)) == A.shape[1] :
@@ -37,10 +37,10 @@ def inverse_power_method (A, x):
         err = np.linalg.norm(x - (y / p), ord=np.inf)
         x = y / p
 
-        iteration_values.append((k+1,1/u+q))
+        values.append(1/u+q)
 
         if err < TOL:
-            return iteration_values
+            return values, len(values)
 
     raise ValueError("Failure after max number of iterations was reached")
 
@@ -55,12 +55,14 @@ failures = 0
 
 for index, row in df.iterrows():
     matrix = np.array( eval(row['matrix']))
-    x = np.random.rand(matrix.shape[0])
+    # x = np.random.rand(matrix.shape[0])
+    x = np.ones(matrix.shape[0])
     try:
-        iteration_values = inverse_power_method(matrix, x)
+        values, iter = inverse_power_method(matrix, x)
         results.append({
             'dominant-eigenvalue': row['dominant-eigenvalue'],
-            'computed-eigenvalues': iteration_values
+            'computed-eigenvalues': values,
+            'iterations': iter
         })
     except ValueError as e:
         failures+=1
