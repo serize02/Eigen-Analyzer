@@ -1,4 +1,4 @@
-# Power Method: Numerical Analysis
+# Numerical Analysis Lab
 
 The power method is an iterative technique used in numerical analysis to find the dominant eigenvalue and corresponding eigenvector of a matrix. It is particularly useful for large sparse matrices where other methods may be computationally expensive.  Its extension to the inverse power method is practical for finding any eigenvalue provided that a
 good initial approximation is known.
@@ -7,12 +7,6 @@ Ensure you have Python installed on your system. Then, install the necessary dep
 
 ```shell
 pip install -r requirements.txt
-```
-
-
-To display Eigen-Analyzer locally, run:
-```shell
-streamlit run app.py
 ```
 
 ## Computing the Dominant Eigenvalues
@@ -101,6 +95,10 @@ and $\lambda_k \approx q + \frac{1}{\mu^{(m)}}$ is the eigenvalue of $A$ that is
 
 The vector $y^{(m)}$ is obtained by solving the system of linear equations $(A-qI)y^{(m)} = x^{(m-1)}$ and for that we use the `numpy.linalg.solve` function, that uses LU decomposition with partial pivoting and row interchanges.
 
+# Eigen-Analyzer
+As a practical example, we have implemented a Streamlit app that words on these methods. So have fun with it!
 
-
+```shell
+streamlit run app.py
+```
 
