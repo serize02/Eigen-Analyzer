@@ -102,3 +102,5 @@ As a practical example, we have implemented a Streamlit app that words on these 
 streamlit run app.py
 ```
 
+![](https://github.com/serize02/power-method/blob/main/assets/st_1.png)
+![](https://github.com/serize02/power-method/blob/main/assets/st_2.png)
