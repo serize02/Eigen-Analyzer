@@ -3,7 +3,7 @@ import pandas as pd
 
 def generate_symmetric_matrices_and_eigenvalues (num_matrices, low, high):
     data = []
-    for size in range(2, 5):
+    for size in range(20,30):
         for _ in range(num_matrices):
             # Generate a random symmetric matrix
             A = np.random.randint(low, high, size = (size,size))
@@ -16,7 +16,7 @@ def generate_symmetric_matrices_and_eigenvalues (num_matrices, low, high):
             })
     return data
 
-matrices_data = generate_symmetric_matrices_and_eigenvalues(30, 1, 100)
+matrices_data = generate_symmetric_matrices_and_eigenvalues(10, 1, 100)
 
 df = pd.DataFrame(matrices_data)
 
