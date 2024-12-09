@@ -17,6 +17,29 @@ class Methods:
         return temp
 
     @staticmethod
+    def power_method(A, N, TOL):
+        n = A.shape[0]
+        x = np.ones(n)
+        p = np.linalg.norm(x, ord=np.inf)
+        x = x / p
+
+        values = []
+
+        for k in range(N):
+            y = A.dot(x)
+            u = p
+            p = np.linalg.norm(y, ord=np.inf)
+            err = np.linalg.norm(x - (y / p), ord=np.inf)
+            x = y / p
+
+            values.append(u)
+
+            if err < TOL:
+                return values
+
+        raise ValueError("Failure after max number of iterations was reached")
+
+    @staticmethod
     def inverse_power_method(A, N, TOL):
         n = A.shape[0]
         x = np.ones(n)
