@@ -9,6 +9,12 @@ Ensure you have Python installed on your system. Then, install the necessary dep
 pip install -r requirements.txt
 ```
 
+
+To display Eigen-Analyzer locally, run:
+```shell
+streamlit run app.py
+```
+
 ## Computing the Dominant Eigenvalues
 
 Let $A$ be an $n \times n$, non-singular real valued matrix with a basis of eigenvectors. Denote the eigenvalues by $\lambda_j$ and eigenvectors by $v_j$. 
