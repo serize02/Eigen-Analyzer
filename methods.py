@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 class Methods:
     @staticmethod
@@ -66,3 +67,32 @@ class Methods:
                 return values
 
         raise ValueError("Failure after max number of iterations was reached")
+
+    @staticmethod
+    def analyze_data(dataset, tolerance, iterations):
+        """
+        Loads the dataset from 'dataset.csv' and computes the eigenvalues using the inverse power method
+        :return: None
+        """
+        df = dataset
+
+        results = []
+        failures = 0
+
+        for index, row in df.iterrows():
+            matrix = np.array(eval(row['matrix']))
+            x = np.ones(matrix.shape[0])
+            try:
+                values_inverse = Methods.inverse_power_method(matrix, iterations, tolerance)
+                values_power = Methods.power_method(matrix, iterations, tolerance)
+                results.append({
+                    'matrix': row['matrix'],
+                    'power-method-values': values_power,
+                    'inverse-power-method-values': values_inverse
+                })
+            except ValueError:
+                failures += 1
+
+        results_df = pd.DataFrame(results)
+
+        return results_df

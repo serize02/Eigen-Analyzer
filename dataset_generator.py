@@ -23,5 +23,5 @@ df = pd.DataFrame(matrices_data)
 df['matrix'] = df['matrix'].apply(lambda x: np.array(x).reshape(int(np.sqrt(len(x))), int(np.sqrt(len(x)))).tolist())
 df['dominant-eigenvalue'] = df['dominant-eigenvalue'].apply(lambda x: round(x, 7))
 
-df.to_csv('dataset.csv', index=False)
+df.to_csv('large_dataset.csv', index=False)
 print("Dataset generated and saved to 'dataset.csv'")
