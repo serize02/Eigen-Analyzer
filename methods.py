@@ -18,7 +18,7 @@ class Methods:
         return temp
 
     @staticmethod
-    def power_method(A, N, TOL):
+    def __power_method(A, N, TOL):
         n = A.shape[0]
         x = np.ones(n)
         p = np.linalg.norm(x, ord=np.inf)
@@ -41,7 +41,7 @@ class Methods:
         raise ValueError("Failure after max number of iterations was reached")
 
     @staticmethod
-    def inverse_power_method(A, N, TOL):
+    def __inverse_power_method(A, N, TOL):
         n = A.shape[0]
         x = np.ones(n)
         q = x.T.dot(A).dot(x) / x.T.dot(x)  # initial approximation
@@ -83,8 +83,8 @@ class Methods:
             matrix = np.array(eval(row['matrix']))
             x = np.ones(matrix.shape[0])
             try:
-                values_inverse = Methods.inverse_power_method(matrix, iterations, tolerance)
-                values_power = Methods.power_method(matrix, iterations, tolerance)
+                values_inverse = Methods.__inverse_power_method(matrix, iterations, tolerance)
+                values_power = Methods.__power_method(matrix, iterations, tolerance)
                 results.append({
                     'matrix': row['matrix'],
                     'power-method-values': values_power,

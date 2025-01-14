@@ -1,17 +1,14 @@
 import time
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 from streamlit_lottie import st_lottie
-
 from methods import Methods
-from load_animation import Load
+from load import Load
 
 def analyze_single_matrix(matrix):
     matrix_latex = Load.latex_conversion(matrix)
-    st.latex(f"A = {matrix_latex}")
-
+    st.latex(f"\Large A = {matrix_latex}")
     power, inverse = st.columns(2)
     with power:
         st.scatter_chart(results['power-method-values'][0], x_label='Iterations', y_label='Eigenvalue', height=500)
@@ -27,29 +24,29 @@ homepage = st.empty()
 
 example_dataset = pd.read_csv('assets/dataset.csv')
 
-homepage.write("""
-# Welcome to Eigen-Analyzer
-#### Eigen-Analyzer is designed to help you analyze and compute dominant eigenvalues using the **Power Method** and its variant the **Inverse Power Method**.
+with homepage:
 
-## How to Use
+    text, img = st.columns((3, 1))
 
-1. **Upload a CSV file**: The file should contain a column named `matrix` with the matrices to be analyzed.
-2. **Set Parameters**: Use the sidebar to set the tolerance and the number of iterations.
-3. **Analyze**: Once the file is uploaded, the analysis will start automatically.
+    with text:
+        text.write("""
+        # Welcome to Eigen-Analyzer
+        Eigen-Analyzer is designed to help you analyze and compute dominant eigenvalues using the **Power Method** and its variant the **Inverse Power Method**.
+        
+        ## How to Use
+        1. **Upload a CSV file**: The file should contain a column named `matrix` with the matrices to be analyzed.
+        2. **Set Parameters**: Use the sidebar to set the tolerance and the number of iterations.
+        3. **Analyze**: Once the file is uploaded, the analysis will start automatically.
+        """)
 
-## Example CSV Format
-
-The CSV file should have the following format:
-""" + example_dataset.to_markdown())
-
-astronaut = Load.load_lottiefile("assets/astronaut.json")
+    with img:
+        animation = Load.load_lottiefile("assets/animation.json")
+        st_lottie(animation, height=300, width=300)
 
 st.sidebar.title("Parameters")
 tolerance = st.sidebar.number_input("Tdolerance", value=1e-6, format="%.6f", step=1e-6)
 iterations = int(st.sidebar.slider("Number of Iterations",min_value=1,max_value=100,value=10,step=1))
 file = st.sidebar.file_uploader("Upload a CSV file", type=["csv"])
-with st.sidebar:
-    st_lottie(astronaut, height=300, width=300)
 
 results = None
 

@@ -10,7 +10,6 @@ class Load:
                        r'\end{pmatrix}'
         return latex_matrix
 
-
     @staticmethod
     def load_lottiefile(filepath: str):
         with open(filepath, "r") as f:
