@@ -7,16 +7,39 @@ from methods import Methods
 from load import Load
 
 def analyze_single_matrix(matrix):
-    matrix_latex = Load.latex_conversion(matrix)
-    st.latex(f"\Large A = {matrix_latex}")
-    power, inverse = st.columns(2)
-    with power:
-        st.scatter_chart(results['power-method-values'][0], x_label='Iterations', y_label='Eigenvalue', height=500)
-        st.latex(r"\Large \lambda_0 \approx" + str(results['power-method-values'][0][-1]))
-    with inverse:
-        st.scatter_chart(results['inverse-power-method-values'][0], x_label='Iterations', y_label='Eigenvalue',height=500)
-        st.latex(r"\Large \lambda_1 \approx" + str(results['inverse-power-method-values'][0][-1]))
+    st.write("""
+        ## Error Reduction on Estimation
+    """)
 
+    matrix_latex = Load.latex_conversion(matrix)
+    st.latex(f"A = {matrix_latex}")
+
+    plot, values = st.columns((0.65,0.35))
+
+    with plot:
+        st.write("""
+            #### Convergence Procedure
+        """)
+        y1 = np.array(results['power-method-values'][0])
+        y2 = np.array(results['inverse-power-method-values'][0])
+        x = np.arange(start=0, stop=max(y1.size, y2.size), step=1)
+
+        while y1.size < x.size:
+            y1 = np.append(y1, y1[-1])
+        while y2.size < x.size:
+            y2 = np.append(y2, y2[-1])
+
+        data = pd.DataFrame({
+            'x': x,
+            'power-method': y1,
+            'inverse-method': y2
+        })
+
+        st.line_chart(data.set_index('x'))
+
+    with values:
+        st.latex(r"\lambda_0 \approx" + str(results['power-method-values'][0][-1]))
+        st.latex(r"\lambda_1 \approx" + str(results['inverse-power-method-values'][0][-1]))
 
 st.set_page_config(layout="wide")
 
@@ -31,7 +54,12 @@ with homepage:
     with text:
         text.write("""
         # Welcome to Eigen-Analyzer
-        Eigen-Analyzer is designed to help you analyze and compute dominant eigenvalues using the **Power Method** and its variant the **Inverse Power Method**.
+        Eigen-Analyzer is a powerful yet intuitive tool designed to explore the fascinating world of matrices. Created with educational research in mind, this app helps you dive deeper into the mathematical concepts of eigenvalues and eigenvectors.
+        At its core, Eigen-Analyzer harnesses the Power Method and its variant, the Inverse Power Method, two fundamental algorithms taught in Numerical Analysis. These methods drive the calculations and provide insights into matrix behavior, making this app an excellent companion for students mastering these topics.
+        
+        Whether you’re a student, educator, or math enthusiast, Eigen-Analyzer is here to enhance your understanding of linear algebra and numerical analysis, making your exploration both insightful and engaging.
+        
+        ##### Discover the elegance of mathematics with Eigen-Analyzer!
         
         ## How to Use
         1. **Upload a CSV file**: The file should contain a column named `matrix` with the matrices to be analyzed.
@@ -41,7 +69,7 @@ with homepage:
 
     with img:
         animation = Load.load_lottiefile("assets/animation.json")
-        st_lottie(animation, height=300, width=300)
+        st_lottie(animation, height=350, width=300)
 
 st.sidebar.title("Parameters")
 tolerance = st.sidebar.number_input("Tdolerance", value=1e-6, format="%.6f", step=1e-6)
@@ -70,6 +98,7 @@ if file is not None:
                 results = Methods.analyze_data(df, tolerance, iterations)
 
 
+
 if results is not None:
 
     if len(results) == 0:
@@ -89,7 +118,7 @@ if results is not None:
         results['inverse-power-method-iterations'] = [len(v) for v in results['inverse-power-method-values']]
 
         st.write("""
-            # Summary Statistics
+            ## Summary Statistics
             ##### The summary statistics provide an overview of the data distribution and convergence behavior.
         """)
 
@@ -106,7 +135,7 @@ if results is not None:
         st.scatter_chart(dominant, x_label='Matrix-Index', height=500)
 
         st.write("""
-            # Number of Iterations Required to Converge to the Dominant Eigenvalue
+            ## Number of Iterations Required to Converge to the Dominant Eigenvalue
             ##### The Inverse Power Method is a modification of the Power Method that gives faster convergence. It is not common to see the number of iterations required to converge for the Power Method to be less than the Inverse Power Method.
         """)
 
@@ -123,11 +152,6 @@ if results is not None:
                 ### Inverse Power Method
             """)
             st.bar_chart(results['inverse-power-method-iterations'], x_label='Matrix-Index', y_label='Iterations', height=500)
-
-        st.write("""
-            # Error Reduction on Estimation
-            ##### To show the error reduction on both methods, we will take a matrix who has a number of iterations for the power-method equal to the mean.
-        """)
 
         row = results.iloc[int(results['power-method-iterations'].mean())]
         matrix = np.array(eval(row['matrix']))
