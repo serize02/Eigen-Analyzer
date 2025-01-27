@@ -36,7 +36,7 @@ class Methods:
             values.append(u)
 
             if err < TOL:
-                return values
+                return values, x
 
         raise ValueError("Failure after max number of iterations was reached")
 
@@ -64,7 +64,7 @@ class Methods:
             values.append(1 / u + q)
 
             if err < TOL:
-                return values
+                return values, x
 
         raise ValueError("Failure after max number of iterations was reached")
 
@@ -83,12 +83,14 @@ class Methods:
             matrix = np.array(eval(row['matrix']))
             x = np.ones(matrix.shape[0])
             try:
-                values_inverse = Methods.__inverse_power_method(matrix, iterations, tolerance)
-                values_power = Methods.__power_method(matrix, iterations, tolerance)
+                values_inverse, x_inv = Methods.__inverse_power_method(matrix, iterations, tolerance)
+                values_power, x_pow = Methods.__power_method(matrix, iterations, tolerance)
                 results.append({
                     'matrix': row['matrix'],
                     'power-method-values': values_power,
-                    'inverse-power-method-values': values_inverse
+                    'power-vector': x_pow,
+                    'inverse-power-method-values': values_inverse,
+                    'inverse-vector': x_inv
                 })
             except ValueError:
                 failures += 1

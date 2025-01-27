@@ -1,5 +1,4 @@
 import json
-
 import requests
 
 class Load:
@@ -9,6 +8,11 @@ class Load:
                        r'\\'.join([' & '.join(map(str, row)) for row in matrix]) + \
                        r'\end{pmatrix}'
         return latex_matrix
+
+    @staticmethod
+    def latex_vector(vector, name):
+        v = (str(vector.tolist()).replace('[', '').replace(']', '').replace('array', ''))
+        return f"{name} = {v}^T"
 
     @staticmethod
     def load_lottiefile(filepath: str):

@@ -7,39 +7,45 @@ from methods import Methods
 from load import Load
 
 def analyze_single_matrix(matrix, results):
-    st.write("""
-        ## Error Reduction on Estimation
-    """)
-
     matrix_latex = Load.latex_conversion(matrix)
-    st.latex(f"A = {matrix_latex}")
+    st.latex(f"\Large A = {matrix_latex}")
 
-    plot, values = st.columns((0.65,0.35))
 
-    with plot:
-        st.write("""
-            #### Convergence Procedure
-        """)
-        y1 = np.array(results['power-method-values'][0])
-        y2 = np.array(results['inverse-power-method-values'][0])
-        x = np.arange(start=0, stop=max(y1.size, y2.size), step=1)
+    st.write("""
+        #### Convergence Procedure
+    """)
+    y1 = np.array(results['power-method-values'][0])
+    y2 = np.array(results['inverse-power-method-values'][0])
+    x = np.arange(start=0, stop=max(y1.size, y2.size), step=1)
 
-        while y1.size < x.size:
-            y1 = np.append(y1, y1[-1])
-        while y2.size < x.size:
-            y2 = np.append(y2, y2[-1])
+    while y1.size < x.size:
+        y1 = np.append(y1, y1[-1])
+    while y2.size < x.size:
+        y2 = np.append(y2, y2[-1])
 
-        data = pd.DataFrame({
-            'x': x,
-            'power-method': y1,
-            'inverse-method': y2
-        })
+    data = pd.DataFrame({
+        'x': x,
+        'power-method': y1,
+        'inverse-method': y2
+    })
 
-        st.line_chart(data.set_index('x'))
+    st.line_chart(data.set_index('x'))
 
-    with values:
+    pow_, inv_ = st.columns(2)
+
+    with pow_:
         st.latex(r"\lambda_0 \approx" + str(results['power-method-values'][0][-1]))
+
+    with inv_:
         st.latex(r"\lambda_1 \approx" + str(results['inverse-power-method-values'][0][-1]))
+
+    if len(results['power-vector']) > 10:
+        st.error("""
+            ##### The dimension of the eigen-vector is too large to be displayed
+        """)
+    else:
+        st.latex(Load.latex_vector(results['power-vector'], 'v_0'))
+        st.latex(Load.latex_vector(results['inverse-vector'], 'v_1'))
 
 
 def main():
