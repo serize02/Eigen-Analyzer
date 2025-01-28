@@ -1,4 +1,4 @@
-import time
+import json
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -9,7 +9,6 @@ from load import Load
 def analyze_single_matrix(matrix, results):
     matrix_latex = Load.latex_conversion(matrix)
     st.latex(f"\Large A = {matrix_latex}")
-
 
     st.write("""
         #### Convergence Procedure
@@ -90,9 +89,10 @@ def main():
             st.error("Please upload a valid CSV file.")
         else:
             valid = True
+
             for index, row in df.iterrows():
                 try:
-                    matrix = np.array(eval(row['matrix']))
+                    matrix = np.array(json.loads(row['matrix']))
                 except:
                     valid = False
                     break
@@ -100,68 +100,15 @@ def main():
                 st.error("The matrix column contains invalid data.")
             else:
                 with st.sidebar, st.spinner("Analyzing data..."):
-                    time.sleep(3)
                     results = Methods.analyze_data(df, tolerance, iterations)
-
-
 
     if results is not None:
 
-        if len(results) == 0:
-            st.error("No valid matrices were found in the dataset.")
-            st.stop()
-
         homepage.empty()
 
-        if len(results) == 1:
-            matrix = np.array(eval(results['matrix'][0]))
-            analyze_single_matrix(matrix, results)
+        matrix = np.array(eval(results['matrix'][0]))
+        analyze_single_matrix(matrix, results)
 
-
-        else :
-            dominant = [v[len(v) - 1] for v in results['power-method-values']]
-            results['power-method-iterations'] = [len(v) for v in results['power-method-values']]
-            results['inverse-power-method-iterations'] = [len(v) for v in results['inverse-power-method-values']]
-
-            st.write("""
-                ## Summary Statistics
-                ##### The summary statistics provide an overview of the data distribution and convergence behavior.
-            """)
-
-            col1, col2 = st.columns([0.75,2.75])
-
-            with col1:
-                st.write(results.describe())
-            with col2:
-                st.write(results.head(8))
-
-            st.write("""
-                ## Dominant Eigenvalues
-            """)
-            st.scatter_chart(dominant, x_label='Matrix-Index', height=500)
-
-            st.write("""
-                ## Number of Iterations Required to Converge to the Dominant Eigenvalue
-                ##### The Inverse Power Method is a modification of the Power Method that gives faster convergence. It is not common to see the number of iterations required to converge for the Power Method to be less than the Inverse Power Method.
-            """)
-
-            power, inverse = st.columns(2)
-
-            with power:
-                st.write("""
-                    ### Power Method
-                """)
-                st.bar_chart(results['power-method-iterations'], x_label='Matrix-Index', y_label='Iterations', height=500)
-
-            with inverse:
-                st.write("""
-                    ### Inverse Power Method
-                """)
-                st.bar_chart(results['inverse-power-method-iterations'], x_label='Matrix-Index', y_label='Iterations', height=500)
-
-            row = results.iloc[int(results['power-method-iterations'].mean())]
-            matrix = np.array(eval(row['matrix']))
-            analyze_single_matrix(matrix, results)
 
 if __name__ == '__main__':
     main()

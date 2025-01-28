@@ -15,7 +15,6 @@ Let $A$ be an $n \times n$, non-singular real valued matrix with a basis of eige
 
 We assume here there is a single eigenvalue of largest magnitude (the ‘dominant’ eigenvalue). Label them as follows:
 
-
 $$ |\lambda_1| > |\lambda_2| \geq |\lambda_3| \geq \dots \geq |\lambda_n| > 0$$
 
 Note that if $A$ has real-valued entries, it must be that $\lambda_1$ is real (why?).
@@ -102,5 +101,3 @@ As a practical example, we have implemented a Streamlit app that words on these 
 streamlit run app.py
 ```
 
-![](https://github.com/serize02/power-method/blob/main/assets/st_1.png)
-![](https://github.com/serize02/power-method/blob/main/assets/st_2.png)
