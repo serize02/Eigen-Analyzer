@@ -100,7 +100,10 @@ def main():
                 st.error("The matrix column contains invalid data.")
             else:
                 with st.sidebar, st.spinner("Analyzing data..."):
-                    results = Methods.analyze_data(df, tolerance, iterations)
+                    try:
+                        results = Methods.analyze_data(df, tolerance, iterations)
+                    except:
+                        st.error("Methods did not converge. Please change the parameters or consider to use another initial vector")
 
     if results is not None:
 

@@ -14,14 +14,13 @@ class Methods:
         return temp
 
     @staticmethod
-    def __power_method(A, x, N, TOL):
-        n = A.shape[0]
+    def __power_method(A, x, n_iter, tol):
         p = np.linalg.norm(x, ord=np.inf)
         x = x / p
 
         values = []
 
-        for k in range(N):
+        for k in range(n_iter):
             y = A.dot(x)
             u = p
             p = np.linalg.norm(y, ord=np.inf)
@@ -30,7 +29,7 @@ class Methods:
 
             values.append(u)
 
-            if err < TOL:
+            if err < tol:
                 return values, x
 
         raise ValueError("Failure after max number of iterations was reached (Power)")
@@ -93,7 +92,6 @@ class Methods:
                 'inverse-power-method-values': values_inverse,
                 'inverse-vector': x_inv
             })
-
         results_df = pd.DataFrame(results)
 
         return results_df
